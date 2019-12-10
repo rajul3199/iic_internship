@@ -1,33 +1,3 @@
-<?php 
-require 'lib/function.php';
-
-$courses = get_courses();
-$colleges = get_colleges();
-
-if ($_SERVER['REQUEST_METHOD'] == "POST") {
-   
-    $name = $_POST['name'];
-    $email = $_POST['email'];
-    $dob = $_POST['dob'];
-
-    $student = array('name' => $name,
-    'email'=>$email,
-    'dob'=>$dob );
-
-    $student_id = save_student($student);
-
-    for ($count=0; $count < count($_POST['colleges']) ; $count++) { 
-    
-      $data = array('studentId' => $student_id,
-        'courseId' => $_POST['courses'][$count],
-        'collegeId' => $_POST['colleges'][$count]
-      );
-      save_course_college($data);
-  }
-    die();
-}
-
- ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -83,52 +53,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
       <div class="col-lg-8">
 
               <div class="card my-4">
-          <h5 class="card-header">Student</h5>
+          <h5 class="card-header">Student Data</h5>
           <div class="card-body">
-        <form action="index.php" method="POST">
-          <div class="form-group">
-            <label for="student-name">Name</label>
-            <input type="text" class="form-control" id="student-name" name="name" placeholder="Enter Your Name">
-          </div>
-          <div class="form-group">
-            <label for="student-email">Email</label>
-            <input type="email" class="form-control" id="student-email" name="email" placeholder="Enter Your Email">
-          </div>
-          <div class="form-group">
-            <label for="student-dob">Date Of Birth</label>
-            <input type="date" class="form-control" id="student-dob" name="dob" placeholder="Enter Your Date of Birth">
-          </div>
-
-          <div class="form-group" id="add_row">
-            <span id="error"></span>
-            <div class="row">
-              <div class="col-md-5">
-               <label for="student-course">Course</label>
-              <select class="form-control" id="student-course" name="courses[]">
-               <?php foreach ($courses as $course) {?>
-                  <option value="<?php echo $course['id']; ?>"><?php echo $course['course_name']; ?></option>
-                <?php } ?>
-              </select>
-              </div>
-              <div class="col-md-5">
-                <label for="student-college">College</label>
-                <select class="form-control" id="student-college" name="colleges[]">
-                  <?php foreach ($colleges as $college) {?>
-                  <option value="<?php echo $college['id']; ?>"><?php echo $college['college_name']; ?></option>
-                <?php } ?>
-                </select>
-              </div>
-              <div class="col-md-2">
-                <label for="student-college">Action</label>
-                <button type="button" class="btn btn-success" id="add">+ Add</button>
-              </div>
-            </div>
-
-
-            
-          </div>
-          <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
+        
           </div>
         </div>  
 
@@ -210,32 +137,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
   </footer>
 
   <!-- Bootstrap core JavaScript -->
- 
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/js/select2.min.js"></script>
   <script src="vendor/jquery/jquery.slim.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-   <script src="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/js/select2.min.js"></script>
-
-  <script type="text/javascript">
-      $(document).ready(function(){
-          var count = 0;
-
-          $(document).on('click','#add',function(){
-            count++;
-            var output = '';
-            output = '     <div class="row my-4"><div class="col-md-5"><select class="form-control" name="courses[]" id="student-course'+count+'"><?php foreach ($courses as $course) {?><option value="<?php echo $course['id']; ?>"><?php echo $course['course_name']; ?></option>';
-            output += '<?php } ?></select></div><div class="col-md-5"><select class="form-control" name="colleges[]" id="student-college'+count+'"><?php foreach ($colleges as $college) {?>
-                  <option value="<?php echo $college['id']; ?>"><?php echo $college['college_name']; ?></option><?php } ?></select></div>';
-              output += '<div class="col-md-2"><button type="button" class="btn btn-danger remove">X</button></div></div>';
-            $('#add_row').append(output);
-          });
-
-
-          $(document).on('click','.remove',function(){
-              $(this).closest('.row').remove();
-          });
-
-      })
-  </script>
 
 </body>
 
