@@ -1,3 +1,14 @@
+<?php 
+
+require 'lib/function.php';
+
+$student_id = $_GET['id'];
+
+$student = get_student($student_id);
+$selected_courses_colleges = get_selected_courses_colleges($student_id);
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -55,7 +66,41 @@
               <div class="card my-4">
           <h5 class="card-header">Student Data</h5>
           <div class="card-body">
-        
+          
+                          <div class="row">
+                          <div class="col-12">
+                          <div class="row">
+                          <div class="col-md-8 col-sm-8">
+                          <h2 class="card-title">Name: <?php echo $student['name']; ?></h2>
+                          <p class="card-text"><strong>Email: </strong> <?php echo $student['email']; ?> </p>
+                          <p class="card-text"><strong>Date of Birth: </strong>  <?php echo $student['dob']; ?></p>
+                          </div>           
+                          </div>
+                          </div>
+                          </div> 
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Serial No.</th>
+                    <th scope="col">Course Name</th>
+                    <th scope="col">College Name</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php $number=0;
+                   foreach ($selected_courses_colleges as $selected_course_college) {
+                      $number++;
+                      $course_name = get_courses($selected_course_college['course_id']);
+                      $college_name = get_colleges($selected_course_college['college_id']);
+                      ?>
+                  <tr>
+                    <td scope="row"><?php echo $number; ?></td>
+                    <td><?php echo $course_name['course_name'] ?></td>
+                    <td><?php echo $college_name['college_name'] ?></td>
+                  </tr>
+                <?php } ?>
+                </tbody>
+              </table>
           </div>
         </div>  
 

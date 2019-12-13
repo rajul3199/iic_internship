@@ -4,11 +4,34 @@ require 'lib/function.php';
 $courses = get_courses();
 $colleges = get_colleges();
 
+
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
    
+    $message = '';
+
     $name = $_POST['name'];
     $email = $_POST['email'];
     $dob = $_POST['dob'];
+
+    if($name == ''){
+      $message = 'Kindly Provide the name.';
+    }
+    if ($email  =='' ) {
+      $message = 'Kindly provide the Email.';
+    }
+
+    if($dob == ''){
+      $message = 'Kindly Provide the Date of Birth';
+    }
+
+    for ($count=0; $count < count($_POST['colleges']) ; $count++) { 
+
+    if (($_POST['courses'][$count] == '') || ($_POST['courses'][$count] == '')) {
+        $message = 'Kindly provide Select the Course name and College Name';    
+    } 
+  }
+
+  if($message == ''){
 
     $student = array('name' => $name,
     'email'=>$email,
@@ -24,7 +47,12 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
       );
       save_course_college($data);
   }
-    die();
+  header('location:student-data.php?id='.$student_id);
+  die();
+  }
+  else{
+     echo '<script type="text/javascript">alert('.$message.') </scrip>';
+  }
 }
 
  ?>
@@ -51,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
     <div class="container">
-      <a class="navbar-brand" href="#">Student Details</a>
+      <a class="navbar-brand" href="#">Student Details*</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -60,11 +88,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
           <li class="nav-item">
            <form class="form-inline" action="login.php" method="POST">
                 <div class="form-group mb-2">
-                  <label for="email" class="sr-only">Email</label>
+                  <label for="email" class="sr-only">Email*</label>
                   <input type="text" class="form-control" id="email" name="email" value="email@example.com">
                 </div>
                 <div class="form-group mx-sm-3 mb-2">
-                  <label for="password" class="sr-only">Password</label>
+                  <label for="password" class="sr-only">Password*</label>
                   <input type="password" class="form-control" name="password" id="password" placeholder="Password">
                 </div>
                 <button type="submit" class="btn btn-primary mb-2">Login</button>
@@ -87,23 +115,23 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
           <div class="card-body">
         <form action="index.php" method="POST">
           <div class="form-group">
-            <label for="student-name">Name</label>
-            <input type="text" class="form-control" id="student-name" name="name" placeholder="Enter Your Name">
+            <label for="student-name">Name*</label>
+            <input type="text" class="form-control" id="student-name" name="name" placeholder="Enter Your Name" required>
           </div>
           <div class="form-group">
-            <label for="student-email">Email</label>
-            <input type="email" class="form-control" id="student-email" name="email" placeholder="Enter Your Email">
+            <label for="student-email">Email*</label>
+            <input type="email" class="form-control" id="student-email" name="email" placeholder="Enter Your Email" required>
           </div>
           <div class="form-group">
-            <label for="student-dob">Date Of Birth</label>
-            <input type="date" class="form-control" id="student-dob" name="dob" placeholder="Enter Your Date of Birth">
+            <label for="student-dob">Date Of Birth*</label>
+            <input type="date" class="form-control" id="student-dob" name="dob" placeholder="Enter Your Date of Birth" required>
           </div>
 
           <div class="form-group" id="add_row">
             <span id="error"></span>
             <div class="row">
               <div class="col-md-5">
-               <label for="student-course">Course</label>
+               <label for="student-course">Course*</label>
               <select class="form-control" id="student-course" name="courses[]">
                <?php foreach ($courses as $course) {?>
                   <option value="<?php echo $course['id']; ?>"><?php echo $course['course_name']; ?></option>
@@ -111,7 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
               </select>
               </div>
               <div class="col-md-5">
-                <label for="student-college">College</label>
+                <label for="student-college">College*</label>
                 <select class="form-control" id="student-college" name="colleges[]">
                   <?php foreach ($colleges as $college) {?>
                   <option value="<?php echo $college['id']; ?>"><?php echo $college['college_name']; ?></option>
